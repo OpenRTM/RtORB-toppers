@@ -43,9 +43,16 @@
 struct sockport_profile  SockProfile[FD_SETSIZE];     /*!< Socket Port Profile */
 static  fd_set main_socket_bits;                      /*!< FD_SET type's union for file descriptor including socket */
 #ifdef USE_THREAD
+#ifdef LWIP
+#include "lwip/sys.h"
+static sys_mutex_t SOCK_MUTEX = 0;
+#define SOCKET_LOCK() do{ if(SOCK_MUTEX == 0){sys_mutex_new(&SOCK_MUTEX);} sys_mutex_lock(&SOCK_MUTEX);} while(0)
+#define SOCKET_UNLOCK() sys_mutex_unlock(&SOCK_MUTEX)
+#else
 static pthread_mutex_t SOCK_MUTEX = PTHREAD_MUTEX_INITIALIZER;
 #define SOCKET_LOCK() pthread_mutex_lock(&SOCK_MUTEX)
 #define SOCKET_UNLOCK() pthread_mutex_unlock(&SOCK_MUTEX)
+#endif
 #else
 #define SOCKET_LOCK() 
 #define SOCKET_UNLOCK() 

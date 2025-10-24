@@ -39,7 +39,12 @@ const CORBA_PolicyErrorCode UNSUPPORTED_POLICY_VALUE = 4;
 #endif
 CORBA_ORB  _ORB_;
 #ifdef USE_THREAD
+#ifdef LWIP
+#include "lwip/sys.h"
+sys_mutex_t CORBA_MUTEX = 0;
+#else
 pthread_mutex_t CORBA_MUTEX = PTHREAD_MUTEX_INITIALIZER;
+#endif
 #endif
 
 /**********************/
