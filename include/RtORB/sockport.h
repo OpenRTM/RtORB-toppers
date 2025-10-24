@@ -30,15 +30,23 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#ifdef LWIP
+#include <lwip/sockets.h>
+#include <lwip/netdb.h>
+#else
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#endif
+
 #include <signal.h>
 #include <sys/time.h>
-
+#ifdef LWIP
+#else
 #include <sys/ioctl.h>
 #include <net/if.h>
+#endif
 
 #ifdef __cplusplus
 extern "C"

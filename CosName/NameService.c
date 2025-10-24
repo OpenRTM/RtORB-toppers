@@ -28,8 +28,10 @@
 #include <stdio.h>
 #include <signal.h>
 #include <pthread.h>
+#ifdef LWIP
 #if !defined(in_addr_t)
 typedef unsigned long in_addr_t;
+#endif
 #endif
 #include <RtORB/corba.h>
 #include "CosNaming.h"

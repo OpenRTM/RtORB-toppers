@@ -135,15 +135,15 @@ int32_t accept_connection(int32_t port_no) {
 }
 
 int copy_fds_set(fd_set *target, fd_set *src){
-  int k;
-  int	 nfds = 1;
+  int	 nfds = 0;
 
-  for(k= FD_SETSIZE-1; k >=0 ;k--){
-    if(FD_ISSET(k, src)){
-      FD_SET(k, target);
-      if(nfds <= k) nfds = k+1;
-    }
-  }
+  for(int k = 0; k < FD_SETSIZE; ++k) {
+     if(FD_ISSET(k, src)) {
+       FD_SET(k, target);
+       nfds = k + 1;
+     }
+   }
+  
   return nfds;
 }
 
@@ -382,8 +382,7 @@ int make_client_socket_port(char *hostname, int port)
 		fprintf(stderr,"host %s not valid\r\n", hostname);
 		return -1;
 	}
-  sock_addr.sin_len = sizeof(struct sockaddr_in);
-        memcpy((char *) &(sock_addr.sin_addr), hp->h_addr_list[0], hp->h_length); 
+  memcpy((char *) &(sock_addr.sin_addr), hp->h_addr_list[0], hp->h_length); 
 	sock_addr.sin_family = AF_INET;
 	sock_addr.sin_port = htons(port);
 

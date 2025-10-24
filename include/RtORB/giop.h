@@ -35,9 +35,15 @@ typedef u_int32_t in_addr_t;
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
+#ifdef LWIP
+#include <lwip/sockets.h>
+#include <lwip/ip_addr.h>
+#include <lwip/inet.h>
+#else
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#endif
 #include <netdb.h>
 #include <sys/time.h>
 #include <unistd.h>

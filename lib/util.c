@@ -38,8 +38,11 @@
 #endif
 #else
 #include <stdio.h>
+#ifdef LWIP
+#else
 #include <sys/ioctl.h>
 #include <net/if.h>
+#endif
 #include <sys/time.h>
 #if defined(Linux) && defined(__STRICT_ANSI__)
 #include <sys/socket.h>

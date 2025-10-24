@@ -2,8 +2,9 @@
 #
 #
 
-
-UNAME := $(shell uname -s)
+#UNAME := $(shell uname -s)
+UNAME := LWIP
+DEFINE = -DLWIP -DUSE_TLSF
 
 MAKE_OPT=""
 
@@ -12,7 +13,7 @@ ifneq (,$(findstring CYGWIN, $(UNAME)))
 endif
 
 
-all: config_rtorb.h link idl_compiler CosName-srcs libs NameService linkbin
+all: config_rtorb.h link idl_compiler CosName-srcs libs linkbin
 
 link:
 	@for i in include lib; \
@@ -27,13 +28,10 @@ idl_compiler:
 	cd idl-compiler && $(MAKE)
 
 libs:
-	cd lib && $(MAKE) "DEFINE=$(DEFINE)"
+	cd lib && $(MAKE) -f Makefile.lwip "DEFINE=$(DEFINE)"
 
 CosName-srcs:
 	cd CosName && $(MAKE) 
-
-NameService:
-	cd CosName && $(MAKE) NameService
 
 # create configuration file 
 config_rtorb.h: 
@@ -47,10 +45,9 @@ linkbin:
 		if [ ! -L rtorb-idl ]; then \
 			ln -s ../idl-compiler/rtorb-idl ./; \
 		fi; \
-		if [ ! -L NameService ]; then \
-			ln -s ../CosName/NameService ./; \
-		fi \
 	fi
+libclean:
+	cd lib && $(MAKE) clean
 
 distclean:
 	/bin/rm -f *~
