@@ -4,7 +4,8 @@
 # $Id: Makefile,v 1.4 2008/04/21 08:07:24 yoshi Exp $
 #
 
-UNAME := $(shell uname -s)
+#UNAME := $(shell uname -s)
+UNAME := LWIP
 ifneq (,$(findstring CYGWIN, $(UNAME)))
 	UNAME = Cygwin
 endif
@@ -40,7 +41,9 @@ NAMING_LIB = libRtORB_CosNaming.so
 
 CFLAGS = -g -Wall -I. -I$(TOP_DIR)/include #-DDEBUG # -DCYGWIN
 CFLAGS = -g -Wall -I. -I$(TOP_DIR)/include -D$(UNAME)
-CFLAGS += -DUSE_THREAD
+CFLAGS += -I../../lwip/src/include/ 
+CFLAGS += -mcpu=cortex-a9  -DUSE_ARM_FPU_ALWAYS -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
+CFLAGS += -DUSE_THREAD 
 LIBS= -lpthread -L$(TOP_DIR)/lib -lRtORB -luuid #-lRtORB_CosNaming
 
 

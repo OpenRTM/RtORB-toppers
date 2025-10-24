@@ -3,7 +3,8 @@
 #
 
 
-UNAME := $(shell uname -s)
+#UNAME := $(shell uname -s)
+UNAME := LWIP
 
 MAKE_OPT=""
 

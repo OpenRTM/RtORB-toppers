@@ -30,10 +30,13 @@
 #include <RtORB/corba.h>
 
 #ifdef USE_THREAD
+#ifdef LWIP
+#else
 pthread_t *
 RunThread(pthread_t *thr, void *(*func)(), void *arg, int detach){
     pthread_create(thr, NULL, func, arg);
     if(detach) pthread_detach(*thr);
     return thr;
 }
+#endif
 #endif

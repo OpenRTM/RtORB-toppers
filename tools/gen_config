@@ -3,7 +3,7 @@
 #UNAME=`uname -s`
 UNAME=$1
 USE_THREAD=0
-NO_UUIDLIB=1
+NO_UUIDLIB=0
 
 for arg in $@
 do

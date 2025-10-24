@@ -34,7 +34,10 @@
 #endif
 
 #ifdef USE_THREAD
+#ifdef LWIP
+#else
 #include <pthread.h>
+#endif
 #endif
 #include <RtORB/giop.h>
 #include <RtORB/typecode.h>
@@ -70,7 +73,10 @@ extern "C"
 */
 #include <RtORB/functions/rtorb.h>
 #ifdef USE_THREAD
+#ifdef LWIP
+#else
 #include <RtORB/functions/pthread.h>
+#endif
 #endif
 
 #include <RtORB/util.h>
@@ -134,9 +140,17 @@ void do_assert(boolean c, const char* info);
 extern CORBA_ORB _ORB_;  /*!< ORB(global)(used in orb.c,poa.c) */
 
 #ifdef USE_THREAD
+#ifdef LWIP
+#include "lwip/sys.h"
+extern sys_mutex_t CORBA_MUTEX;
+#define CORBA_MUTEX_LOCK() do{ if(CORBA_MUTEX == 0){sys_mutex_new(&CORBA_MUTEX);} sys_mutex_lock(&CORBA_MUTEX);} while(0)
+#define CORBA_MUTEX_UNLOCK() sys_mutex_unlock(&CORBA_MUTEX)
+
+#else
 extern pthread_mutex_t  CORBA_MUTEX;  /*!< MUTEX(global) */
 #define CORBA_MUTEX_LOCK() pthread_mutex_lock(&CORBA_MUTEX)
 #define CORBA_MUTEX_UNLOCK() pthread_mutex_unlock(&CORBA_MUTEX)
+#endif
 #else
 #define CORBA_MUTEX_LOCK() 
 #define CORBA_MUTEX_UNLOCK() 

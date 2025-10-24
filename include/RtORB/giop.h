@@ -19,6 +19,19 @@
 #ifndef __GIOP_H__
 #define __GIOP_H__
 
+
+
+
+
+#ifdef __cplusplus
+extern "C"
+{
+#if !defined(in_addr_t) 
+typedef u_int32_t in_addr_t;
+#endif
+#endif 
+
+
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
@@ -31,12 +44,6 @@
 
 #include <RtORB/giop-defs.h>
 #include <RtORB/util.h>
-
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif 
 
 /*!
  * @if jp

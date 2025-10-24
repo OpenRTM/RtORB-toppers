@@ -6,7 +6,9 @@
 #  $Id: Makefile,v 1.10 2008/06/06 10:14:21 yoshi Exp $
 #
 #
-
+CC = /usr/bin/arm-none-eabi-gcc
+CXX = /usr/bin/arm-none-eabi-g++
+AR = /usr/bin/arm-none-eabi-ar
 UNAME := $(shell uname -s)
 
 ifneq (,$(findstring CYGWIN, $(UNAME)))
@@ -27,7 +29,6 @@ CFLAG_THREAD =
 
 #CFLAGS_UUID =
 #CFLAGS_UUID = -DUSE_UUID
-
 ifeq ($(UNAME),Cygwin)
 CFLAGS = $(INCLUDE) $(CFLAG_DEBUG) $(CFLAG_THREAD) $(CFLAGS_UUID)
 UUID_LIB = -L/usr/lib/e2fsprogs -luuid
@@ -35,13 +36,18 @@ else
 CFLAGS = -fpic $(INCLUDE) $(CFLAG_DEBUG) $(CFLAG_OS) $(CFLAG_THREAD) $(CFLAG_UUID)
 endif
 CFLAGS += -O2
+CFLAGS += -DUSE_TLSF
+CFLAGS += -mcpu=cortex-a9  -DUSE_ARM_FPU_ALWAYS -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
+LDFLAGS += -mcpu=cortex-a9  -DUSE_ARM_FPU_ALWAYS -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
 #CFLAGS += -ansi
 
 TOP_DIR=..
 IDL_SRC = CosNaming
 IDL_SOURCE = $(TOP_DIR)/idl/$(IDL_SRC).idl
 
-INCLUDE = -I. -I../include -I./CosName 
+INCLUDE = -I. -I../include -I./CosName -I../include/RtORB/functions/
+INCLUDE += -I../../asp3_3.7/appli/ -I../../lwip/src/include/  -I../../asp3_3.7/bsp/include/
+INCLUDE += -I../../lwip/src/include/lwip/ -I../../lwip/contrib/ports/toppers/include/
 
 NAMING_SRCS = CosName/CosNaming-common.c CosName/CosNaming-skels.c CosName/CosNaming-stubs.c CosName/NameService_impl.c
 NAMING_OBJ = $(NAMING_SRCS:.c=.o)
@@ -78,8 +84,8 @@ RANLIB=/usr/bin/ranlib
 
 all: 
 	$(MAKE) CosNaming
-	$(MAKE) $(LIBORB)
-	$(MAKE) libCXX
+	#$(MAKE) $(LIBORB)
+	#$(MAKE) libCXX
 	$(MAKE) $(LIBORB_A)
 
 CosName:
@@ -97,10 +103,11 @@ libCXX:
 	fi
 
 $(LIBORB): $(LIBOBJS) $(NAMING_HEADER) $(NAMING_SRCS)
-	$(CC) -shared -o $@ $(LIBOBJS)  $(UUID_LIB)
+	$(CC) -shared -o $@ $(LIBOBJS)  $(UUID_LIB) $(LDFLAGS)
 
 $(LIBORB_A): $(LIBOBJS) $(NAMING_HEADER) $(NAMING_SRCS)
-	$(AR) rv $@ $(LIBOBJS)  # $(UUID_LIB)
+#$(AR) rv $@ $(LIBOBJS)  # $(UUID_LIB)
+	$(AR) rcs $@ $(LIBOBJS)
 	$(RANLIB)  $@
 
 clean:

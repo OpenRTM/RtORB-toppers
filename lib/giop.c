@@ -34,7 +34,7 @@
 
 #include <sys/types.h>
 #include <unistd.h>
-#if !defined(Cygwin)
+#if !defined(Cygwin) && !(LWIP)
 #include <ifaddrs.h>
 #endif
 #include <sys/select.h>

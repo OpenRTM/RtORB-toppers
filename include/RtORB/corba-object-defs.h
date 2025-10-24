@@ -45,7 +45,10 @@ typedef struct GIOP_Connection{
   unsigned char *hostname;
 
 #if USE_THREAD
+#ifdef LWIP
+#else
   pthread_t thread;
+#endif
 #endif
 } GIOP_Connection;
 

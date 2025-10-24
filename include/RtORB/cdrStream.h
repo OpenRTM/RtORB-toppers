@@ -203,7 +203,7 @@ public:
    return;
  }
 
-#if defined(Cygwin) && ( __GNUC__ < 4 )
+#if (defined(Cygwin) && ( __GNUC__ < 4 )) ||(defined(LWIP))
 /*!
  * @brief (TODO)
  */

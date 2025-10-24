@@ -28,7 +28,10 @@
 #include <stdint.h>
 
 #if USE_THREAD
+#ifdef LWIP
+#else
 #include <pthread.h>
+#endif
 #endif
 #include <RtORB/list.h>
 #include <RtORB/array.h>

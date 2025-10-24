@@ -4,7 +4,8 @@
 # $Id: Makefile,v 1.7 2008/06/06 08:04:06 yoshi Exp $
 #
 
-UNAME := $(shell uname -s)
+#UNAME := $(shell uname -s)
+UNAME := LWIP
 
 ifneq (,$(findstring CYGWIN, $(UNAME)))
 	UNAME = Cygwin
@@ -49,13 +50,16 @@ CFLAGS += -g
 #CFLAGS += -D$(UNAME)
 
 #CFLAGS= -fpic -I. -I$(TOP_DIR)/include  -I../CosName
+CFLAGS += -std=c++11
+CFLAGS += -I../../../lwip/src/include/ -I../../../lwip/src/include/lwip/  -I../../include/RtORB/functions/ 
+CFLAGS += -mcpu=cortex-a9  -DUSE_ARM_FPU_ALWAYS -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
 CXXFLAGS= $(CFLAGS)
 
 
 LIBS= -L$(TOP_DIR)/lib -lRtORB  -L. -lRtORB_cpp 
 
-CC=g++
-
+#CC=g++
+CC=arm-none-eabi-g++
 RANLIB=/usr/bin/ranlib
 
 TARGET = $(LIBORB) $(LIBORB_A)
@@ -89,7 +93,8 @@ decode-ior: $(OBJS_DECODE)
 	$(CC) -o $@ $(OBJS_DECODE) $(LIBS)
 
 $(LIBORB): $(LIBOBJS)
-	$(CC) -shared -fPIC -o $@ $(LIBOBJS)  -L.. -lRtORB  -luuid
+	$(CC) -shared -fPIC -o $@ $(LIBOBJS)  -L.. -lRtORB
+#	$(CC) -shared -fPIC -o $@ $(LIBOBJS)  -L.. -lRtORB  -luuid
 
 $(LIBORB_A): $(LIBOBJS)
 	$(AR) rv $@ $(LIBOBJS) 

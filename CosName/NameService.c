@@ -28,6 +28,9 @@
 #include <stdio.h>
 #include <signal.h>
 #include <pthread.h>
+#if !defined(in_addr_t)
+typedef unsigned long in_addr_t;
+#endif
 #include <RtORB/corba.h>
 #include "CosNaming.h"
 

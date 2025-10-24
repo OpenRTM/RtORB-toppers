@@ -286,6 +286,38 @@ char *get_ip_address(int sock){
   return (char *)NULL;
 }
 #else
+#if defined(LWIP)
+extern  struct netif *netif_list;
+char *get_ip_address(int sock){
+  struct netif *netif_ptr = netif_list;
+  struct sockaddr_in addr;
+  socklen_t socklen;
+  ip_addr_t socket_ip_addr;
+
+  //getsockname(sock,(struct sockaddr *)&addr,&socklen);
+  //socket_ip_addr = *(ip_addr_t*)&addr.sin_addr;
+
+  while (netif_ptr != NULL) {
+      //if(ip4_addr_cmp(&netif_ptr->ip_addr,&socket_ip_addr))
+      if(netif_ptr->ip_addr.addr!=0)
+      {
+        char *ip_addr =  ipaddr_ntoa(&netif_ptr->ip_addr);
+        if(  1 //(addr.sin_family == AF_INET)
+        #if 1
+              && (strcmp(ip_addr,"127.0.0.1") != 0)
+              && (strncmp(ip_addr,"169.254.", 8) != 0)
+              && (strcmp(ip_addr,"0.0.0.0") != 0)
+        #endif
+        )
+        {
+            return RtORB_strdup(ip_addr, "get_ip_address");
+        }  
+      }
+       netif_ptr = netif_ptr->next;
+  }
+  return (char *)NULL;
+}
+#else
 char *get_ip_address(int sock){
   int stat;
   struct ifaddrs *ifap;
@@ -324,7 +356,7 @@ char *get_ip_address(int sock){
 }
 
 #endif
-
+#endif
 /*
  *
  * Client side
@@ -341,7 +373,7 @@ int make_client_socket_port(char *hostname, int port)
 		fprintf(stderr,"host %s not valid\r\n", hostname);
 		return -1;
 	}
-
+  sock_addr.sin_len = sizeof(struct sockaddr_in);
         memcpy((char *) &(sock_addr.sin_addr), hp->h_addr_list[0], hp->h_length); 
 	sock_addr.sin_family = AF_INET;
 	sock_addr.sin_port = htons(port);
@@ -351,14 +383,16 @@ int make_client_socket_port(char *hostname, int port)
 /*
 		 perror("socket");
 */
+     fprintf(stderr,"socket fd := %d\n",fd);
 		 return(-1);
 	}
-
-	if(connect(fd, (struct sockaddr *)&sock_addr, sizeof(sock_addr)) < 0){
+   int err;
+	if((err = connect(fd, (struct sockaddr *)&sock_addr, sizeof(sock_addr))) < 0){
 /*
 		perror("connect");
 */
-		return(-1);
+    fprintf(stderr,"connect fd := %d ,err:=%d ,hostname:=%s\n",fd,err,hostname);
+		//return(-1);
 	}
 	
 	return fd;

@@ -175,6 +175,45 @@ char *new_ObjectID(){
   return id;
 }
 #else
+#if defined(LWIP)
+
+char *new_ObjectID(){
+  int fd;
+  struct ifreq *ifr;
+  struct timeval tv;
+#ifndef Linux
+  struct timezone tz;
+#endif
+  struct netif *netif_ptr = netif_list;
+
+  char *ID = (char *)RtORB_alloc(33, "new_ObjectID"); 
+  memset(ID, 0, 33);
+
+  while (netif_ptr != NULL) {
+    if(netif_ptr->ip_addr.addr!=0)
+    {
+      /* IP4 有効*/
+      break;
+    }
+    netif_ptr = netif_ptr->next;
+  }
+
+
+  gettimeofday(&tv, NULL);
+
+  sprintf(ID, "RtORB%.2X%.2X%.2X%.2X%.2X%.2X",
+	(unsigned char)netif_ptr->hwaddr[0],
+   	(unsigned char)netif_ptr->hwaddr[1],
+   	(unsigned char)netif_ptr->hwaddr[2],
+   	(unsigned char)netif_ptr->hwaddr[3],
+   	(unsigned char)netif_ptr->hwaddr[4],
+  	(unsigned char)netif_ptr->hwaddr[5]);
+  sprintf(ID+16, "%010X", (int)tv.tv_sec);
+  sprintf(ID+26, "%06X", (int)tv.tv_usec);
+
+  return ID;
+}
+#else
 char *new_ObjectID(){
   int fd;
   struct ifreq *ifr;
@@ -229,6 +268,7 @@ char *new_ObjectID(){
 
   return ID;
 }
+#endif
 #endif
 
 /************************************/

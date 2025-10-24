@@ -26,7 +26,11 @@
 #define __POA_DEFS_H__
 
 #if USE_THREAD
+#ifdef LWIP
+#include "lwip/sys.h"
+#else
 #include <pthread.h>
+#endif
 #endif
 #include <RtORB/array.h>
 #include <RtORB/list.h>
@@ -89,7 +93,11 @@ typedef struct PortableServer_POAManager_struct{
 
   uint32_t status;
 #if USE_THREAD
+#if LWIP
+  sys_thread_t _thread[FD_SETSIZE];
+#else
   pthread_t _thread[FD_SETSIZE];
+#endif
 #endif
 } PortableServer_POAManager_struct;
 
