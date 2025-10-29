@@ -30,6 +30,17 @@
 #define USE_UUID
 #endif
 #else
+#ifdef USE_TLSF
+#ifdef __cplusplus
+extern "C"{
+#endif
+#include "tlsf.h"
+char* strdup(const char* s);
+char* strndup(const char* s,size_t n);
+#ifdef __cplusplus
+}
+#endif
+#endif 
 #include <endian.h>
 #endif
 
@@ -115,6 +126,14 @@ extern "C"
 #  define RtORB_strndup(s, n, info)	RtORB__strndup(s, n, info)
 #  define RtORB_free(s, info)		RtORB__free(s, info)
 #else
+#ifdef USE_TLSF
+#  define RtORB_alloc(s, info)		tlsf_malloc(s)
+#  define RtORB_realloc(p, s, info)	tlsf_realloc(p, s)
+#  define RtORB_calloc(s, n, info)	tlsf_calloc(n, s)
+#  define RtORB_strdup(s, info)		strdup(s)
+#  define RtORB_strndup(s, n, info)	strndup(s, n)
+#  define RtORB_free(s, info)		tlsf_free(s)
+#else
 #  define RtORB_alloc(s, info)		malloc(s)
 #  define RtORB_realloc(p, s, info)	realloc(p, s)
 #  define RtORB_calloc(s, n, info)	calloc(n, s)
@@ -122,6 +141,7 @@ extern "C"
 #  define RtORB_strndup(s, n, info)	strndup(s, n)
 #  define RtORB_free(s, info)		free(s)
 #endif
+#endif 
 
 #define DEFAULT_HASH_SIZE 64
 

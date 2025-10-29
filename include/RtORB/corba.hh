@@ -29,3 +29,9 @@
 #include <RtORB/functions/corba-exception.hh>
 #include <CosName/CosNaming.h>
 #include <RtORB/cdrStream.h>
+
+#ifdef USE_TLSF
+#include "tlsf.h"
+char* strdup(const char* s);
+char* strndup(const char* s,size_t n);
+#endif

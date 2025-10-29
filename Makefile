@@ -5,6 +5,7 @@
 
 #UNAME := $(shell uname -s)
 UNAME := LWIP
+DEFINE = -DLWIP -DUSE_TLSF
 
 MAKE_OPT=""
 
