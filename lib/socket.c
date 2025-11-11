@@ -25,7 +25,10 @@
  * @endif
  * @author National Institute of Advanced Industrial Science and Technology (AIST)
  */
-
+#ifdef LWIP
+#define _SYS_SELECT_H
+#include "lwip/sockets.h"
+#endif
 #include <math.h>
 #include <RtORB/corba.h>
 #include <RtORB/sockport.h>
@@ -39,7 +42,6 @@
 #include <ifaddrs.h>
 #include <netinet/tcp.h>
 #endif
-
 struct sockport_profile  SockProfile[FD_SETSIZE];     /*!< Socket Port Profile */
 static  fd_set main_socket_bits;                      /*!< FD_SET type's union for file descriptor including socket */
 #ifdef USE_THREAD
@@ -136,10 +138,10 @@ int copy_fds_set(fd_set *target, fd_set *src){
   int k;
   int	 nfds = 1;
 
-  for(k= FD_SETSIZE-1; k >0 ;k--){
+  for(k= FD_SETSIZE-1; k >=0 ;k--){
     if(FD_ISSET(k, src)){
       FD_SET(k, target);
-      if(nfds < k) nfds = k+1;
+      if(nfds <= k) nfds = k+1;
     }
   }
   return nfds;

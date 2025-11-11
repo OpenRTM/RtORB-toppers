@@ -36,7 +36,7 @@ else
 CFLAGS = -fpic $(INCLUDE) $(CFLAG_DEBUG) $(CFLAG_OS) $(CFLAG_THREAD) $(CFLAG_UUID)
 endif
 CFLAGS += -O2
-CFLAGS += -DUSE_TLSF
+CFLAGS += -DLWIP -DUSE_TLSF
 CFLAGS += -mcpu=cortex-a9  -DUSE_ARM_FPU_ALWAYS -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
 LDFLAGS += -mcpu=cortex-a9  -DUSE_ARM_FPU_ALWAYS -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
 #CFLAGS += -ansi

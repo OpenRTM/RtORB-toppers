@@ -25,7 +25,10 @@
  * @endif
  * @author National Institute of Advanced Industrial Science and Technology (AIST)
  */
-
+#ifdef LWIP
+#define _SELECT_H_
+#include "lwip/sockets.h"
+#endif
 #include <RtORB/corba.h>
 #if defined(USE_UUID)
 #if defined(FreeBSD)

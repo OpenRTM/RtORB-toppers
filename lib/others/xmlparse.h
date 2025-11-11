@@ -19,7 +19,9 @@
 #define __XML_PARSER_H__
 
 #include <stdio.h>
+#ifndef LWIP
 #include <sys/types.h>
+#endif
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
