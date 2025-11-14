@@ -36,7 +36,6 @@ CFLAGS = -fpic $(INCLUDE) $(CFLAG_DEBUG) $(CFLAG_OS) $(CFLAG_THREAD) $(CFLAG_UUI
 endif
 CFLAGS += -O2
 #CFLAGS += -ansi
-CFLAGS += -DLWIP=1
 
 TOP_DIR=..
 IDL_SRC = CosNaming
@@ -44,7 +43,7 @@ IDL_SOURCE = $(TOP_DIR)/idl/$(IDL_SRC).idl
 
 INCLUDE = -I. -I../include -I./CosName 
 
-NAMING_SRCS = CosName/CosNaming-common.c CosName/CosNaming-skels.c CosName/CosNaming-stubs.c CosName/NameService_impl.c
+NAMING_SRCS = CosName/CosNaming-common.c CosName/CosNaming-skels.c CosName/CosNaming-skelimpl.c CosName/CosNaming-stubs.c 
 NAMING_OBJ = $(NAMING_SRCS:.c=.o)
 NAMING_HEADER = CosName/CosNaming.h
 

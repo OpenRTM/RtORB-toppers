@@ -49,7 +49,7 @@ INCLUDE = -I. -I../include -I./CosName -I../include/RtORB/functions/
 INCLUDE += -I../../asp3_3.7/appli/ -I../../asp3_3.7/bsp/include/
 INCLUDE += -I../../lwip/src/include/ -I../../lwip/src/include/lwip  -I../../lwip/contrib/ports/toppers/include/
 
-NAMING_SRCS = CosName/CosNaming-common.c CosName/CosNaming-skels.c CosName/CosNaming-stubs.c CosName/NameService_impl.c
+NAMING_SRCS = CosName/CosNaming-common.c CosName/CosNaming-skels.c CosName/CosNaming-stubs.c CosName/CosNaming-skelimpl.c
 NAMING_OBJ = $(NAMING_SRCS:.c=.o)
 NAMING_HEADER = CosName/CosNaming.h
 
@@ -93,7 +93,7 @@ CosName:
 	fi;
 	
 CosNaming: CosName $(IDL_SOURCE)
-	cd CosName && $(MAKE) 
+	cd CosName && $(MAKE) -f Makefile.lwip "DEFINE=$(DEFINE)" "CC=$(CC)" "CXX=$(CXX)" "AR=$(AR)"
 
 libCXX: 
 	cd CXX && $(MAKE) -f Makefile.lwip "DEFINE=$(DEFINE)" "CC=$(CXX)" "CXX=$(CXX)"
