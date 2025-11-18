@@ -27,7 +27,8 @@
 extern "C"
 {
 #if !defined(in_addr_t) 
-typedef u_int32_t in_addr_t;
+#include <stdint.h>+
+typedef uint32_t in_addr_t;
 #endif
 #endif 
 

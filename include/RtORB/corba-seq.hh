@@ -609,7 +609,7 @@ namespace CORBA_sequence {
      */    
     ElemRef operator[] (CORBA::Long n)
     {
-      return _obj->operator[](n);
+      return _obj->operator[]((CORBA::ULong)n);
 
     }
     /*!
@@ -617,7 +617,7 @@ namespace CORBA_sequence {
      */    
     ElemRef operator[] (CORBA::ULong n)
     {
-      return _obj->operator[](n);
+      return _obj->operator[]((CORBA::ULong)n);
     }
     /*!
      * @brief (TODO)
