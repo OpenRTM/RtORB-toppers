@@ -39,7 +39,7 @@
 #endif
 #include <sys/select.h>
 
-#define RECV_BUF_SIZE  1024 * 2048
+#define RECV_BUF_SIZE  GIOP_SIZEMAX
 
 extern CORBA_ORB _ORB_;
 /***********************************/

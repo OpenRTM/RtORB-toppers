@@ -45,6 +45,11 @@ typedef u_int32_t in_addr_t;
 #include <RtORB/giop-defs.h>
 #include <RtORB/util.h>
 
+#ifdef LWIP
+#define GIOP_SIZEMAX 1024*4
+#else
+#define GIOP_SIZEMAX 1024*2048
+#endif
 /*!
  * @if jp
  * @brief ClientからServer接続用にSocketを作成し、Portやホストを割り当てる。 GIOP接続用ハンドラを用意し、これらを割り当て、返す。  (refer rtorb.c)

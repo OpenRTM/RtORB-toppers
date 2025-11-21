@@ -1373,8 +1373,7 @@ Marshal_Reply_Arguments(GIOP_ReplyBody *reply,
 {
    char *reply_buf = NULL;
    int size = 0;
-   int MaxSize = 2000000;
-
+   int MaxSize = GIOP_SIZEMAX;
    reply_buf = (char *)RtORB_alloc( MaxSize,"Marshal_Reply_Arguments");
    if(! reply_buf ){ 
      fprintf(stderr, "Error in Marshal_Reply_Arguments: Fail to allocate buffer...\n");
