@@ -26,9 +26,11 @@
 #ifdef __cplusplus
 extern "C"
 {
-#if !defined(in_addr_t) 
+#ifdef LWIP
+#if !defined(in_addr_t)
 #include <stdint.h>+
 typedef uint32_t in_addr_t;
+#endif
 #endif
 #endif 
 
