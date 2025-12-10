@@ -24,10 +24,6 @@ extern "C"{
 
 #include "RtORB/corba-object-defs.hh"
 
-#if defined(LWIP)
-#undef shutdown
-#undef bind
-#endif
 namespace CORBA{
 
   class ORB;
