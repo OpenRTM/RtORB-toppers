@@ -1,26 +1,39 @@
-# RtORB
+---
+title: TOPPERS版OpenRTMの最新版対応
+subtitle: LWIP組み込み
+author: 伊藤和宣
+keywords: ["Rev1.0"]
+---
+
+# RtORB  
 Light-weight CORBA implementation with C-Language.
 
-## LWIP組み込み
-組み込みOS上で動作させることを目的にTCP/IPプロトコルスタックとしてLWIP組み込みを実施した。
+<br>
 
-### RtORBソース修正方針
+## LWIP組み込み  
+組み込みOS上で動作することを目的にTCP/IPプロトコルスタックとしてLWIP組み込みを実施した。
+
+<br>
+
+### RtORBソース修正方針  
 malloc等のメモリ管理、gettimeofday等の関数以外に必要な、
-mutex、socket通信用関数等はすべてLWIPで提供される関数を使用する構成とした。
+mutex、socket通信用関数等はすべてLWIPで提供される関数を使用する構成とした。  
 
-定義値LWIPを用いて、LWIP固有の処理については「#ifdef LWIP #endif」節内で記述することとした。
+定義値LWIPを用いて、LWIP固有の処理については「#ifdef LWIP #endif」節内で記述することとした。  
 
-実施内容
+実施内容  
 
-- インクルードするヘッダのLWIP対応
-- 型宣言、関数定義のLWIP追加対応
-- 標準ライブラリ定義とのコンフリクト対応
-- メモリバッファサイズ等のLWIP対応
-- 動的メモリ管理機構の組み込み
-- ビルドスクリプトの変更
-- メイクファイルの変更
+* インクルードするヘッダのLWIP対応
+* 型宣言、関数定義のLWIP追加対応
+* 標準ライブラリ定義とのコンフリクト対応
+* メモリバッファサイズ等のLWIP対応
+* 動的メモリ管理機構の組み込み
+* ビルドスクリプトの変更
+* メイクファイルの変更
 
-#### インクルードするヘッダのLWIP対応
+<div style="page-break-before：always"></div>
+
+#### インクルードするヘッダのLWIP対応  
 ```
 corba-defs.h:31
 #ifdef LWIP
@@ -58,7 +71,11 @@ poa-defs.h:29
 #else
 #include <pthread.h>
 #endif
+```
 
+<div style="page-break-before：always"></div>
+
+```
 sockport.h:33
 #ifdef LWIP
 #include <lwip/sockets.h>
@@ -97,7 +114,9 @@ util.c:41
 #endif
 ```
 
-#### 型宣言、関数定義のLWIP追加対応
+<div style="page-break-before：always"></div>
+
+#### 型宣言、関数定義のLWIP追加対応  
 ```
 cdrstream.h:206
 #if (defined(Cygwin) && ( __GNUC__ < 4 )) ||(defined(LWIP))
@@ -120,7 +139,11 @@ RunThread(pthread_t *thr, void *(*func)(), void *arg, int detach){
     return thr;
 }
 #endif
+```
 
+<div style="page-break-before：always"></div>
+
+```
 socket.c:297
 #else
 #if defined(LWIP)
@@ -154,8 +177,16 @@ char *get_ip_address(int sock){
   }
   return (char *)NULL;
 }
+<<<<<<< HEAD
 #else
+=======
+#else
+```
+>>>>>>> da06127 ([MOD] 体裁を整える)
 
+<div style="page-break-before：always"></div>
+
+```
 util.c:177
 #else
 #if defined(LWIP)
@@ -199,16 +230,21 @@ char *new_ObjectID(){
 #else
 ```
 
-#### 標準ライブラリ定義とのコンフリクト対応
-標準のselect.hの定義とコンフリクトするため、定義値を定義して標準のselect.h読み込みを抑制する。今回はLWIPが提供しているFD_SETSIZEと違う値が定義されてしまい、ファイルディスクリプタの扱いに支障があるため読み込みを抑制。
+<div style="page-break-before：always"></div>
+
+#### 標準ライブラリ定義とのコンフリクト対応  
+標準のselect.hの定義とコンフリクトするため、定義値を定義して標準のselect.h読み込みを抑制する。今回はLWIPが提供しているFD_SETSIZEと違う値が定義されてしまい、ファイルディスクリプタの扱いに支障があるため読み込みを抑制。  
 ```
 #ifdef LWIP
 #define _SELECT_H_
 #include "lwip/sockets.h"
 #endif
 ```
-#### メモリバッファサイズ等のLWIP対応
-GIOPの受信バッファサイズ、返答バッファサイズを2Mbytesから4kbytesに変更。
+
+<br>
+
+#### メモリバッファサイズ等のLWIP対応  
+GIOPの受信バッファサイズ、返答バッファサイズを2Mbytesから4kbytesに変更。  
 ```
 giop.h:57
 #ifdef LWIP
@@ -232,8 +268,13 @@ giop.c:943
 giop-marshal.c:1376
 int MaxSize = GIOP_SIZEMAX;
 ```
-#### 動的メモリ管理機構の組み込み
-動的メモリ管理機構としてtlsfを組み込んで使用する。tlsf自体はtoppers側で提供する。
+
+<br>
+
+<div style="page-break-before：always"></div>
+
+#### 動的メモリ管理機構の組み込み  
+動的メモリ管理機構としてtlsfを組み込んで使用する。tlsf自体はtoppers側で提供する。  
 ```
 corba.h:33
 #ifdef USE_TLSF
@@ -266,37 +307,57 @@ char* strndup(const char* s,size_t n);
 #endif
 
 ```
-#### ビルドスクリプトの変更
+
+<div style="page-break-before：always"></div>
+
+#### ビルドスクリプトの変更  
 ```
 gen_config:6
 NO_UUIDLIB=0  <--- 1->0
 
 ```
-#### メイクファイルの変更
-Makefile.lwipを作成して、Linux用のメイクファイルとは完全に分離した。
-##### ツールチェインを変更
+
+<br>
+
+#### メイクファイルの変更  
+Makefile.lwipを作成して、Linux用のメイクファイルとは完全に分離した。  
+
+<br>
+
+##### ツールチェインを変更  
 ```
 CC = /usr/bin/arm-none-eabi-gcc
 CXX = /usr/bin/arm-none-eabi-g++
 AR = /usr/bin/arm-none-eabi-ar
 ```
-##### インクルードパスの追加
+
+<br>
+
+##### インクルードパスの追加  
 ```
 INCLUDE = -I. -I../include -I./CosName -I../include/RtORB/functions/
 INCLUDE += -I../../asp3_3.7/appli/ -I../../asp3_3.7/bsp/include/
 INCLUDE += -I../../lwip/src/include/ -I../../lwip/src/include/lwip  -I../../lwip/contrib/ports/toppers/include/
 ```
-##### CFLAGSの追加
+
+<br>
+
+##### CFLAGSの追加  
 ```
 CFLAGS += -DLWIP -DUSE_TLSF
 CFLAGS += -mcpu=cortex-a9  -DUSE_ARM_FPU_ALWAYS -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
 ```
-##### LDFLAGSの追加
+
+<br>
+
+##### LDFLAGSの追加  
 ```
 LDFLAGS += -mcpu=cortex-a9  -DUSE_ARM_FPU_ALWAYS -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
 ```
 
-#####  静的ライブラリの生成ルールの追加及び<br>シェアドライブラリの生成抑制
+<div style="page-break-before：always"></div>
+
+#####  静的ライブラリの生成ルールの追加及びシェアドライブラリの生成抑制  
 
 ```
 all: 
@@ -311,3 +372,4 @@ $(LIBORB_A): $(LIBOBJS) $(NAMING_HEADER) $(NAMING_SRCS)
 
 ```
 
+<div style="page-break-before：always"></div>
