@@ -2,7 +2,7 @@
 Light-weight CORBA implementation with C-Language.
 
 ## LWIP組み込み
-組み込みOS上動作することを目的にTCP/IPプロトコルスタックとしてLWIP組み込みを実施した。
+組み込みOS上で動作させることを目的にTCP/IPプロトコルスタックとしてLWIP組み込みを実施した。
 
 ### RtORBソース修正方針
 malloc等のメモリ管理、gettimeofday等の関数以外に必要な、
@@ -11,6 +11,7 @@ mutex、socket通信用関数等はすべてLWIPで提供される関数を使�
 定義値LWIPを用いて、LWIP固有の処理については「#ifdef LWIP #endif」節内で記述することとした。
 
 実施内容
+
 - インクルードするヘッダのLWIP対応
 - 型宣言、関数定義のLWIP追加対応
 - 標準ライブラリ定義とのコンフリクト対応
@@ -120,7 +121,7 @@ RunThread(pthread_t *thr, void *(*func)(), void *arg, int detach){
 }
 #endif
 
-socket.c:288
+socket.c:297
 #else
 #if defined(LWIP)
 extern  struct netif *netif_list;
@@ -153,9 +154,10 @@ char *get_ip_address(int sock){
   }
   return (char *)NULL;
 }
+#else
 
 util.c:177
-else
+#else
 #if defined(LWIP)
 
 char *new_ObjectID(){
@@ -194,6 +196,7 @@ char *new_ObjectID(){
 
   return ID;
 }
+#else
 ```
 
 #### 標準ライブラリ定義とのコンフリクト対応
